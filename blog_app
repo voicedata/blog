@@ -18,7 +18,7 @@ DAEMON=/usr/local/rvm/bin/blog_app_unicorn_rails
 DAEMON_OPTS="-c /home/jfu/projects/blog/config/unicorn.rb -D -E production"
 NAME=blog_app
 DESC="blog_app for testing"
-PID=/home/jfu/projects/blog/tmp/pid/unicorn.pid
+PID=/home/jfu/projects/blog/tmp/pids/unicorn.pid
 
 case "$1" in
   start)

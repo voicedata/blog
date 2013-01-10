@@ -23,6 +23,7 @@ worker_processes 2
 # "current" directory that Capistrano sets up.
 working_directory "/home/jfu/projects/blog" # available in 0.94.0+
 
+user "jfu", "www-data"
 # listen on both a Unix domain socket and a TCP port,
 # we use a shorter backlog for quicker failover when busy
 listen "/tmp/.sock", :backlog => 64
