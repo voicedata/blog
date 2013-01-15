@@ -1,3 +1,4 @@
+default_run_options[:pty] = true
 set :application, "blog app"
 set :repository,  "https://github.com/voicedata/blog.git"
 
@@ -20,11 +21,13 @@ set :use_sudo, false
 set :deploy_via, :copy
 
 set :rvm_ruby_string, 'ruby-1.9.3@blog'
-set :rvm_install_pkgs, %w[libyaml openssl]
-set :rvm_install_ruby_params, '--with-opt-dir=/usr/local/rvm/usr'
-before 'deploy:setup', 'rvm:install_pkgs'
-before 'deploy:setup', 'rvm:install_rvm'
+require "rvm/capistrano" 
 before 'deploy:setup', 'rvm:install_ruby'
+ENV['GEM']='bundler'
+before 'deploy:setup', 'rvm:install_gem'
+
+require "bundler/capistrano"
+#after 'deploy:update_code', 'bundle:install'
 
 # if you want to clean up old releases on each deploy uncomment this:
 # after "deploy:restart", "deploy:cleanup"
