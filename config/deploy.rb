@@ -33,6 +33,7 @@ set :bundle_dir, ''
 after 'deploy:update_code', 'bundle:install'
 after 'deploy:update_code', 'deploy:unicorn_wrapper'
 after 'deploy:update_code', 'deploy:file_permissions'
+before 'deploy:restart', 'deploy:migrate'
 before 'deploy:restart', 'deploy:init_script'
 before 'deploy:restart', 'deploy:restart_app'
 
@@ -51,5 +52,7 @@ namespace :deploy do
   end
   task :init_script, :roles => :app, :except => { :no_release => true } do
     run "#{sudo} cp #{deploy_to}/current/config/init.d /etc/init.d/#{application}" 
+    run "#{sudo} chmod +x /etc/init.d/#{application}"
+    run "#{sudo} update-rc.d #{application} defaults"
   end
 end

@@ -32,7 +32,7 @@ case "$1" in
   restart)
     echo -n "Restarting $DESC: "
         kill -QUIT `cat $PID`
-    sleep 1
+    sleep 5
     $DAEMON $DAEMON_OPTS
     echo "$NAME."
     ;;
