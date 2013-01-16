@@ -29,19 +29,22 @@ before 'deploy:setup', 'rvm:install_gem'
 require "bundler/capistrano"
 set :bundle_flags, "--system --quiet"
 set :bundle_dir, ''
+
 after 'deploy:update_code', 'bundle:install'
-after 'bundle:install', 'deploy:install_ruby_wrapper'
-#before 'deploy:restart', 'deploy:change_permissions'
+after 'deploy:update_code', 'deploy:unicorn_wrapper'
+after 'deploy:update_code', 'deploy:file_permissions'
+before 'deploy:restart', 'deploy:init_script'
+before 'deploy:restart', 'deploy:restart_app'
+
 namespace :deploy do
-  task :install_ruby_wrapper do
+  task :unicorn_wrapper do
     run "rvm wrapper #{rvm_ruby_string} #{application} unicorn_rails"
   end
-
-  task :change_permissions do
-    run "chown -R #{user}:www-data #{deploy_to}"
+  task :file_permissions do
+    run "#{sudo} chown -R #{user}:www-data #{deploy_to}"
   end
   task :restart_app, :roles => :app, :except => { :no_release => true } do
-
+    run "#{sudo} service #{application} restart"
   end
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "#{sudo} service nginx restart"
@@ -50,17 +53,3 @@ namespace :deploy do
     run "#{sudo} cp #{deploy_to}/current/config/init.d /etc/init.d/#{application}" 
   end
 end
-# if you want to clean up old releases on each deploy uncomment this:
-# after "deploy:restart", "deploy:cleanup"
-
-# if you're still using the script/reaper helper you will need
-# these http://github.com/rails/irs_process_scripts
-
-# If you are using Passenger mod_rails uncomment this:
-# namespace :deploy do
-#   task :start do ; end
-#   task :stop do ; end
-#   task :restart, :roles => :app, :except => { :no_release => true } do
-#     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
-#   end
-# end
