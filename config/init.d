@@ -14,11 +14,11 @@
 
 #source /usr/local/rvm/environments/ruby-1.9.3-p286@blog
 
-DAEMON=/usr/local/rvm/bin/blog_app_unicorn_rails
-DAEMON_OPTS="-c /home/jfu/projects/blog/config/unicorn.rb -D -E production"
-NAME=blog_app
-DESC="blog_app for testing"
-PID=/home/jfu/projects/blog/tmp/pids/unicorn.pid
+DAEMON=/home/webmstr/.rvm/bin/blog_unicorn_rails
+DAEMON_OPTS="-c /opt/www/blog/current/config/unicorn.rb -D -E production"
+NAME=blog
+DESC="blog for testing"
+PID=/opt/www/blog/current/tmp/pids/unicorn.pid
 
 case "$1" in
   start)

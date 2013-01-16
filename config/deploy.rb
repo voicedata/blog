@@ -1,5 +1,5 @@
 default_run_options[:pty] = true
-set :application, "blog app"
+set :application, "blog"
 set :repository,  "https://github.com/voicedata/blog.git"
 
 set :scm, :git # You can set :scm explicitly or Capistrano will make an intelligent guess based on known version control directory names
@@ -27,8 +27,29 @@ ENV['GEM']='bundler'
 before 'deploy:setup', 'rvm:install_gem'
 
 require "bundler/capistrano"
-#after 'deploy:update_code', 'bundle:install'
+set :bundle_flags, "--system --quiet"
+set :bundle_dir, ''
+after 'deploy:update_code', 'bundle:install'
+after 'bundle:install', 'deploy:install_ruby_wrapper'
+#before 'deploy:restart', 'deploy:change_permissions'
+namespace :deploy do
+  task :install_ruby_wrapper do
+    run "rvm wrapper #{rvm_ruby_string} #{application} unicorn_rails"
+  end
 
+  task :change_permissions do
+    run "chown -R #{user}:www-data #{deploy_to}"
+  end
+  task :restart_app, :roles => :app, :except => { :no_release => true } do
+
+  end
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "#{sudo} service nginx restart"
+  end
+  task :init_script, :roles => :app, :except => { :no_release => true } do
+    run "#{sudo} cp #{deploy_to}/current/config/init.d /etc/init.d/#{application}" 
+  end
+end
 # if you want to clean up old releases on each deploy uncomment this:
 # after "deploy:restart", "deploy:cleanup"
 
