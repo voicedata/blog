@@ -57,6 +57,6 @@ namespace :deploy do
   end
   task :nginx_site, :roles => :app, :except => { :no_release => true } do
     run "#{sudo} cp -f #{deploy_to}/current/config/#{application}.conf /etc/nginx/sites-available"
-    run "#{sudo} ln -f -s /etc/nginx/sites-available/#{application}.conf /etc/nginx/sites/enabled/#{application}.conf"
+    run "#{sudo} ln -f -s /etc/nginx/sites-available/#{application}.conf /etc/nginx/sites-enabled/#{application}.conf"
   end 
 end
