@@ -36,7 +36,7 @@ after 'deploy:update_code', 'deploy:file_permissions'
 before 'deploy:restart', 'deploy:migrate'
 before 'deploy:restart', 'deploy:init_script'
 before 'deploy:restart', 'deploy:restart_app'
-
+before 'deploy:restart', 'deploy:nginx_site'
 namespace :deploy do
   task :unicorn_wrapper do
     run "rvm wrapper #{rvm_ruby_string} #{application} unicorn_rails"
@@ -55,4 +55,10 @@ namespace :deploy do
     run "#{sudo} chmod +x /etc/init.d/#{application}"
     run "#{sudo} update-rc.d #{application} defaults"
   end
+  task :nginx_site, :roles => :app, :except => { :no_release => true } do
+    run "#{sudo} rm /etc/nginx/sites-available/#{application}.conf"
+    run "#{sudo} rm /etc/nginx/sites-enabled/#{application}.conf"
+    run "#{sudo} cp #{deploy_to}/current/config/#{application}.conf /etc/nginx/sites-available"
+    run "#{sudo} ln -s /etc/nginx/sites-available/#{application}.conf /etc/nginx/sites/enabled/#{application}.conf"
+  end 
 end
