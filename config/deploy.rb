@@ -56,9 +56,7 @@ namespace :deploy do
     run "#{sudo} update-rc.d #{application} defaults"
   end
   task :nginx_site, :roles => :app, :except => { :no_release => true } do
-    run "#{sudo} rm /etc/nginx/sites-available/#{application}.conf"
-    run "#{sudo} rm /etc/nginx/sites-enabled/#{application}.conf"
-    run "#{sudo} cp #{deploy_to}/current/config/#{application}.conf /etc/nginx/sites-available"
-    run "#{sudo} ln -s /etc/nginx/sites-available/#{application}.conf /etc/nginx/sites/enabled/#{application}.conf"
+    run "#{sudo} cp -f #{deploy_to}/current/config/#{application}.conf /etc/nginx/sites-available"
+    run "#{sudo} ln -f -s /etc/nginx/sites-available/#{application}.conf /etc/nginx/sites/enabled/#{application}.conf"
   end 
 end
