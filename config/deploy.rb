@@ -1,4 +1,5 @@
 default_run_options[:pty] = true
+ssh_options[:forward_agent] = true
 set :application, "blog"
 set :repository,  "https://github.com/voicedata/blog.git"
 
@@ -16,31 +17,44 @@ server "210.50.199.199", :web, :app, :db, :primary => true
 
 set :user, "webmstr"
 set :scm_username, 'voicedata'
-set :use_sudo, false
+set :use_sudo, true 
 
 set :deploy_via, :copy
 
-set :rvm_ruby_string, 'ruby-1.9.3@blog'
+set :rvm_type, :user
+#set :rvm_install_with_sudo, true
+set :rvm_ruby_string, 'ruby-1.9.3-p362'
 require "rvm/capistrano" 
+before 'deploy:setup', 'rvm:install_rvm'
+#before 'rvm:install_ruby', 'deploy:add_user_to_rvm_group'
+#
 before 'deploy:setup', 'rvm:install_ruby'
 ENV['GEM']='bundler'
+before 'deploy:setup', 'deploy:rvm_requirements'
+
 before 'deploy:setup', 'rvm:install_gem'
 
 require "bundler/capistrano"
-set :bundle_flags, "--system --quiet"
-set :bundle_dir, ''
+#set :bundle_flags, "--system --quiet"
+#set :bundle_dir, ''
 
 after 'deploy:update_code', 'bundle:install'
-after 'deploy:update_code', 'deploy:unicorn_wrapper'
+#after 'deploy:update_code', 'deploy:unicorn_wrapper'
 after 'deploy:update_code', 'deploy:file_permissions'
 before 'deploy:restart', 'deploy:migrate'
 before 'deploy:restart', 'deploy:init_script'
 before 'deploy:restart', 'deploy:restart_app'
 before 'deploy:restart', 'deploy:nginx_site'
 namespace :deploy do
-  task :unicorn_wrapper do
-    run "rvm wrapper #{rvm_ruby_string} #{application} unicorn_rails"
+#  task :add_user_to_rvm_group do
+#    run "#{sudo} usermod -a -G rvm #{user}"
+#  end
+  task :rvm_requirements do
+    run "#{sudo} apt-get -y install build-essential openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison subversion pkg-config libmysql-ruby libmysqlclient-dev"
   end
+#  task :unicorn_wrapper do
+#    run "rvm wrapper #{rvm_ruby_string} #{application} unicorn_rails"
+#  end
   task :file_permissions do
     run "#{sudo} chown -R #{user}:www-data #{deploy_to}"
   end

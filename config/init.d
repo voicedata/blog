@@ -12,11 +12,15 @@
 # Description:       starts blog_app
 ### END INIT INFO
 
-DAEMON=/home/webmstr/.rvm/bin/blog_unicorn_rails
-DAEMON_OPTS="-c /opt/www/blog/current/config/unicorn.rb -D -E production"
-NAME=blog
-DESC="blog for testing"
-PID=/opt/www/blog/current/tmp/pids/unicorn.pid
+NAME="blog"
+RUBY_VERSION="ruby-1.9.3-p362"
+APP_ROOT = "/opt/www/$NAME/current"
+GEM_HOME="/opt/www/$APP_NAME/shared/bundle/ruby/1.9.1/"
+SET_PATH="cd $APP_ROOT; rvm use $RUBY_VERSION; export GEM_HOME=$GEM_HOME"
+DAEMON="$SET_PATH; $GEM_HOME/bin/unicorn_rails"
+DAEMON_OPTS="-c /opt/www/$NAME/current/config/unicorn.rb -D -E production"
+DESC="$NAME"
+PID="$APP_ROOT/tmp/pids/unicorn.pid"
 
 case "$1" in
   start)
