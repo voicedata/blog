@@ -14,7 +14,7 @@
 
 NAME="blog"
 RUBY_VERSION="ruby-1.9.3-p362"
-APP_ROOT = "/opt/www/$NAME/current"
+APP_ROOT="/opt/www/$NAME/current"
 GEM_HOME="/opt/www/$APP_NAME/shared/bundle/ruby/1.9.1/"
 SET_PATH="cd $APP_ROOT; rvm use $RUBY_VERSION; export GEM_HOME=$GEM_HOME"
 DAEMON="$SET_PATH; $GEM_HOME/bin/unicorn_rails"
