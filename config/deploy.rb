@@ -17,7 +17,7 @@ server "210.50.199.199", :web, :app, :db, :primary => true
 
 set :user, "webmstr"
 set :scm_username, 'voicedata'
-set :use_sudo, true 
+set :use_sudo, false 
 
 set :deploy_via, :copy
 
