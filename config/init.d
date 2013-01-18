@@ -13,14 +13,12 @@
 ### END INIT INFO
 
 NAME="blog"
-RUBY_VERSION="ruby-1.9.3-p362"
 APP_ROOT="/opt/www/$NAME/current"
-GEM_HOME="/opt/www/$APP_NAME/shared/bundle/ruby/1.9.1/"
-SET_PATH="cd $APP_ROOT; rvm use $RUBY_VERSION; export GEM_HOME=$GEM_HOME"
-DAEMON="$SET_PATH; $GEM_HOME/bin/unicorn_rails"
-DAEMON_OPTS="-c /opt/www/$NAME/current/config/unicorn.rb -D -E production"
+cd $APP_ROOT
+DAEMON="/home/wembstr/.rvm/bin/blog_bundle"
+DAEMON_OPTS="exec unicorn_rails -c /opt/www/$NAME/current/config/unicorn.rb -D -E production"
 DESC="$NAME"
-PID="$APP_ROOT/tmp/pids/unicorn.pid"
+PID="/opt/www/$NAME/current/tmp/pids/unicorn.pid"
 
 case "$1" in
   start)

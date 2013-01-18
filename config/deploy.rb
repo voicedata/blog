@@ -39,7 +39,7 @@ require "bundler/capistrano"
 #set :bundle_dir, ''
 
 after 'deploy:update_code', 'bundle:install'
-#after 'deploy:update_code', 'deploy:unicorn_wrapper'
+after 'deploy:update_code', 'deploy:unicorn_wrapper'
 after 'deploy:update_code', 'deploy:file_permissions'
 before 'deploy:restart', 'deploy:migrate'
 before 'deploy:restart', 'deploy:init_script'
@@ -52,9 +52,9 @@ namespace :deploy do
   task :rvm_requirements do
     run "#{sudo} apt-get -y install build-essential openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev ncurses-dev automake libtool bison subversion pkg-config libmysql-ruby libmysqlclient-dev"
   end
-#  task :unicorn_wrapper do
-#    run "rvm wrapper #{rvm_ruby_string} #{application} unicorn_rails"
-#  end
+  task :unicorn_wrapper do
+    run "rvm wrapper #{rvm_ruby_string} #{application} bundle"
+  end
   task :file_permissions do
     run "#{sudo} chown -R #{user}:www-data #{deploy_to}"
   end
