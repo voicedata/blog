@@ -15,7 +15,7 @@
 NAME="blog"
 APP_ROOT="/opt/www/$NAME/current"
 cd $APP_ROOT
-DAEMON="/home/wembstr/.rvm/bin/blog_bundle"
+DAEMON="/home/webmstr/.rvm/bin/blog_bundle"
 DAEMON_OPTS="exec unicorn_rails -c /opt/www/$NAME/current/config/unicorn.rb -D -E production"
 DESC="$NAME"
 PID="/opt/www/$NAME/current/tmp/pids/unicorn.pid"
