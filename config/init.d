@@ -33,9 +33,9 @@ case "$1" in
     ;;
   restart)
     echo -n "Restarting $DESC: "
-        kill -USR2 `cat $PID`
-#    sleep 5
-#    $DAEMON $DAEMON_OPTS
+        kill -QUIT `cat $PID`
+    sleep 3
+    $DAEMON $DAEMON_OPTS
     echo "$NAME."
     ;;
   reload)
